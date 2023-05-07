@@ -1,0 +1,23 @@
+name: ghatesting
+
+tests:
+  parallelism: 2
+  primary:
+    - name: demo-rails
+      build: .
+      command: /bin/sleep 300
+      environment:
+        SERVICEYAML: yep
+        CI_ENVIRONMENT: override
+        TEST: service.yaml should be overriden by S3
+      junit: rspec.xml
+      artifacts:
+        - rspec.xml
+        - does-not-exist.txt
+  steps:
+    - run:
+        test: test env vars 1
+        command: bin/test/test-env-vars.sh
+    - run:
+        test: rspec
+        command: bundle exec rspec --format progress --format RspecJunitFormatter --out rspec.xml
